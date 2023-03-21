@@ -1,5 +1,4 @@
 name: Check pods
-
 on:
   push:
       branches: ["main"]
