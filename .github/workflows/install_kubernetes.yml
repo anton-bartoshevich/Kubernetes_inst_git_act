@@ -13,28 +13,13 @@ jobs:
     outputs:
       output1: ${{steps.check.outputs.check}}
     steps:
-    - name: Executing remote ssh commands using password
-      uses: appleboy/ssh-action@v0.1.6
-      id: check
-      env:
-        SSH_PUB: ${{secrets.SSH_PUB}}
-      with:
-        host: ${{ secrets.JUMP_HOST }}
-        username: ${{ secrets.JUMP_USERNAME }}
-        password: ${{ secrets.JUMP_PASS }}
-        envs: SSH_PUB
-        script:  |
-          echo $SSH_PUB >> ~/.ssh/k3s.pub
-    - name: Add ssh and checking pods
+    - name: Add SSH key and connect to k3s
       run: |
-        mkdir -p ~/.ssh
+        which ssh-agent
+        mkdir ~/.ssh
         eval `ssh-agent -s`
-        echo "$SSH_PRIVATE_KEY" > ~/.ssh/k3s
-        sudo chmod 600 ~/.ssh/k3s
-        ssh-add - <<< "$SSH_PRIVATE_KEY"
-        #ssh ${{ secrets.JUMP_USERNAME}}@${{secrets.JUMP_HOST}} ssh-keyscan ${{ secrets.K3S_HOST }} >> ~/.ssh/known_hosts
-        #sshpass -p ${{ secrets.K3S_PASS }} ssh -oProxyCommand="sshpass ssh -W %h:%p ${{ secrets.JUMP_USERNAME}}@${{secrets.JUMP_HOST}}" root@${{ secrets.K3S_HOST }} "kubectl get pods -A" >> ${{ env.result_file}}  
-      shell: bash
-      env:
-        SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
-        SSH_PUBLIC: ${{secrets.SSH_PUB}}
+        ssh-add - <<< "${{secrets.SSH_KEY}}"
+        ssh-keyscan -H ${{ secrets.JUMP_HOST }} >> ~/.ssh/known_hosts
+        ssh ${{ secrets.JUMP_USERNAME }}@${{ secrets.JUMP_HOST }} ssh-keyscan ${{ secrets.K3S_HOST }} >> ~/.ssh/known_hosts
+        #ssh -o ProxyCommand="ssh -W %h:%p ${{ secrets.PROXY_USERNAME }}@${{ secrets.PROXY_HOST }}" ${{ secrets.HOST_USERNAME }}@${{ secrets.HOST_IP }} "kubectl get pods -A" >> ${{ env.output }}
+    - name: Check pods status
