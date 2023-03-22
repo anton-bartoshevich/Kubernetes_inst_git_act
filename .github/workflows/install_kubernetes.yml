@@ -19,6 +19,6 @@ jobs:
       env:
         SSH_PUB: ${{secrets.SSH_PUB}}
       with:
-        host: ${{secrets.JUMP_IP}}
+        host: ${{secrets.JUMP_HOST}}
         username: ${{ secrets.JUMP_USERNAME }}
         password: ${{ secrets.JUMP_PASS}}
