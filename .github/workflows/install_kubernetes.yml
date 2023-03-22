@@ -31,7 +31,7 @@ jobs:
         eval `ssh-agent -s`
         echo "$SSH_PRIVATE_KEY" > ~/.ssh/k3s
         sudo chmod 600 ~/.ssh/k3s
-        #ssh-add - <<< "$SSH_PRIVATE_KEY"
+        ssh-add - <<< "$SSH_PRIVATE_KEY"
         #ssh ${{ secrets.JUMP_USERNAME}}@${{secrets.JUMP_HOST}} ssh-keyscan ${{ secrets.K3S_HOST }} >> ~/.ssh/known_hosts
         #sshpass -p ${{ secrets.K3S_PASS }} ssh -oProxyCommand="sshpass ssh -W %h:%p ${{ secrets.JUMP_USERNAME}}@${{secrets.JUMP_HOST}}" root@${{ secrets.K3S_HOST }} "kubectl get pods -A" >> ${{ env.result_file}}  
       shell: bash
