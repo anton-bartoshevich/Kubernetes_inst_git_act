@@ -1,7 +1,6 @@
 name: Check pods
-on:
-  push:
-      branches: ["main"]
+ schedule:
+   - cron: '*/10 * * * *'
 jobs:
 
   build:
@@ -9,13 +8,15 @@ jobs:
     env:
       report-file: report.log
     steps:
-    - name: install packages
-      id: install
-      run: |
-        sudo apt-get -y update
-        sudo apt-get -y install sshuttle
-        sudo snap install kubectl --classic
-    - name: Connect via SSH
-      id: ssh_connect
-      run: |
-        ping -c 4 178.124.206.53
+   - name: Executing remote ssh commands using password
+      uses: appleboy/ssh-action@v0.1.6
+      id: check
+      env:
+        SSH_PUB: ${{ secrets.SSH_PUB }}
+      with:
+        host: ${{ secrets.JUMP_HOST }}
+        username: ${{ secrets.JUMP_USERNAME }}
+        password: ${{ secrets.JUMP_PASS}}
+        envs: SSH_PUB
+        script: |
+                 echo $SSH_PUB >> ~/.ssh/k3s.pub
