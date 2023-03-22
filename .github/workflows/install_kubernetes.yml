@@ -5,10 +5,6 @@ on:
       - 'main'
 jobs:
   check:
-    env:
-      result_file: result.log
-      channel: git-test
-      GIT: ${{ secrets.JUMP_HOST }} 
     runs-on: ubuntu-latest
     outputs:
       output1: ${{steps.check.outputs.check}}
@@ -22,4 +18,3 @@ jobs:
         ssh-keyscan -H ${{ secrets.JUMP_HOST }} >> ~/.ssh/known_hosts
         ssh ${{ secrets.JUMP_USERNAME }}@${{ secrets.JUMP_HOST }} ssh-keyscan ${{ secrets.K3S_HOST }} >> ~/.ssh/known_hosts
         #ssh -o ProxyCommand="ssh -W %h:%p ${{ secrets.PROXY_USERNAME }}@${{ secrets.PROXY_HOST }}" ${{ secrets.HOST_USERNAME }}@${{ secrets.HOST_IP }} "kubectl get pods -A" >> ${{ env.output }}
-    - name: Check pods status
