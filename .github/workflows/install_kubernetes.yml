@@ -37,5 +37,5 @@ jobs:
         sshpass -p ${{ secrets.K3S_PASS }} ssh -oProxyCommand="sshpass ssh -W %h:%p ${{ secrets.JUMP_USERNAME}}@${{secrets.JUMP_HOST}}" root@${{ secrets.K3S_HOST }} "kubectl get pods -A" >> ${{ env.result_file}}  
       shell: bash
       env:
-        SSH_PRIVATE: ${{secrets.SSH_PRIVATE}}
+        SSH_PRIVATE: ${{secrets.SSH_PRIVATE_KEY}}
         SSH_PUBLIC: ${{secrets.SSH_PUB}}
