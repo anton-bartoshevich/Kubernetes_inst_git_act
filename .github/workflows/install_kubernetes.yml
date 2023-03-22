@@ -28,6 +28,7 @@ jobs:
     - name: Add ssh and checking pods
       run: |
         mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
         eval `ssh-agent -s`
         echo "$SSH_PRIVATE_KEY" > ~/.ssh/k3s
         sudo chmod 600 ~/.ssh/k3s
