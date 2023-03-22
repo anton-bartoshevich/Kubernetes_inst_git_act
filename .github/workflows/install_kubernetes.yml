@@ -1,22 +1,24 @@
 name: Check pods
- schedule:
-   - cron: '*/10 * * * *'
+on:
+   push:
+    branches:
+      - 'master'
 jobs:
-
-  build:
-    runs-on: ubuntu-latest
+  check:
     env:
-      report-file: report.log
+      result_file: result.log
+      channel: git-test
+      GIT: ${{secrets.JUMP_IP}} 
+    runs-on: ubuntu-latest
+    outputs:
+      output1: ${{steps.check.outputs.check}}
     steps:
-   - name: Executing remote ssh commands using password
+    - name: Executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.6
       id: check
       env:
-        SSH_PUB: ${{ secrets.SSH_PUB }}
+        SSH_PUB: ${{secrets.SSH_PUB}}
       with:
-        host: ${{ secrets.JUMP_HOST }}
+        host: ${{secrets.JUMP_IP}}
         username: ${{ secrets.JUMP_USERNAME }}
         password: ${{ secrets.JUMP_PASS}}
-        envs: SSH_PUB
-        script: |
-                 echo $SSH_PUB >> ~/.ssh/k3s.pub
