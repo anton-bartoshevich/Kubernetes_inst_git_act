@@ -2,7 +2,7 @@ name: Check pods
 on:
    push:
     branches:
-      - 'master'
+      - 'main'
 jobs:
   check:
     env:
