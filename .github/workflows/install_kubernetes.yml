@@ -17,11 +17,4 @@ jobs:
           ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
           ssh-keyscan -H ${{ secrets.JUMP_HOST }} >> ~/.ssh/known_hosts
           ssh  ${{ secrets.JUMP_USERNAME }}@{{secrets.JUMP_HOST}}
-          ip a >> report-file
-          
-      - name: upload crashed pod's list
-        uses: actions/upload-artifact@v3
-        with:
-          path: ${{ env.report-file }}
-          
-          
+          ip a        
