@@ -34,7 +34,7 @@ jobs:
         #ssh-add - <<< "$SSH_PRIVATE_KEY"
         #ssh-keyscan -H ${{secrets.JUMP_HOST}} >> ~/.ssh/known_hosts
         #ssh ${{ secrets.JUMP_USERNAME}}@${{secrets.JUMP_HOST}} ssh-keyscan ${{ secrets.K3S_HOST }} >> ~/.ssh/known_hosts
-        sshpass -p ${{ secrets.K3S_PASS }} ssh -oProxyCommand="sshpass ssh -W %h:%p ${{ secrets.JUMP_USERNAME}}@${{secrets.JUMP_HOST}}" root@${{ secrets.K3S_HOST }} "kubectl get pods -A" >> ${{ env.result_file}}  
+        #sshpass -p ${{ secrets.K3S_PASS }} ssh -oProxyCommand="sshpass ssh -W %h:%p ${{ secrets.JUMP_USERNAME}}@${{secrets.JUMP_HOST}}" root@${{ secrets.K3S_HOST }} "kubectl get pods -A" >> ${{ env.result_file}}  
       shell: bash
       env:
         SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
