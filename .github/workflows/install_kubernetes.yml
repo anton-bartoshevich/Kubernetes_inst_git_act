@@ -22,3 +22,20 @@ jobs:
         host: ${{secrets.JUMP_HOST}}
         username: ${{ secrets.JUMP_USERNAME }}
         password: ${{ secrets.JUMP_PASS}}
+        envs: SSH_PUB
+        script:  |
+          echo $SSH_PUB >> ~/.ssh/k3s.pub
+    - name: Add ssh and checking pods
+      run: |
+        mkdir -p ~/.ssh
+        eval `ssh-agent -s`
+        echo "$SSH_PRIVATE" > ~/.ssh/k3s
+        sudo chmod 600 ~/.ssh/k3s
+        ssh-add - <<< "$SSH_PRIVATE"
+        ssh-keyscan -H ${{secrets.JUMP_IP}} >> ~/.ssh/known_hosts
+        ssh ${{ secrets.JUMP_USERNAME}}@${{secrets.JUMP_IP}} ssh-keyscan ${{ secrets.K3S_HOST }} >> ~/.ssh/known_hosts
+        sshpass -p ${{ secrets.K3S_PASS }} ssh -oProxyCommand="sshpass ssh -W %h:%p ${{ secrets.JUMP_USERNAME}}@${{secrets.JUMP_IP}}" root@${{ secrets.K3S_HOST }} "kubectl get pods -A" >> ${{ env.result_file}}  
+      shell: bash
+      env:
+        SSH_PRIVATE: ${{secrets.SSH_PRIVATE}}
+        SSH_PUBLIC: ${{secrets.SSH_PUB}}
