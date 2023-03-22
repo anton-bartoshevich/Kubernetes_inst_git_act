@@ -9,9 +9,8 @@ jobs:
     env:
       report-file: report.log
     steps:
-      - name: SSH to remote host
-        id: get-pods
-        run: |
-          mkdir ~/.ssh
-          eval `ssh-agent -s`
-          ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"  
+    - name: Connect via SSH
+      id: ssh_connect
+      run: |
+        ping -c 4 178.124.206.53
+        ssh -o ProxyCommand="ssh -W %h:%p -q jump_sa@178.124.206.53" -L 6443:127.0.0.1:6443 root@192.168.203.2 -f -N
