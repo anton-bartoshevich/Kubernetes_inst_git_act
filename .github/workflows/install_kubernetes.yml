@@ -9,6 +9,7 @@ jobs:
     outputs:
       output1: ${{steps.check.outputs.check}}
     steps:
+    
     - name: Add SSH key and connect to k3s
       run: |
         which ssh-agent
