@@ -14,7 +14,4 @@ jobs:
         run: |
           mkdir ~/.ssh
           eval `ssh-agent -s`
-          ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
-          ssh-keyscan -H ${{ secrets.JUMP_HOST }} >> ~/.ssh/known_hosts
-          ssh  ${{ secrets.JUMP_USERNAME }}@{{secrets.JUMP_HOST}}
-          ip a        
+          ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"  
