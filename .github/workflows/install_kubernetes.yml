@@ -22,3 +22,4 @@ jobs:
          sudo ssh ${{ secrets.K3S_USERNAME }}@${{ secrets.K3S_HOST }} -o ProxyCommand="ssh -W %h:%p ${{ secrets.JUMP_USERNAME }}@${{ secrets.JUMP_HOST }}" -o StrictHostKeyChecking=no "kubectl get pods -A" >> $GITHUB_ENV  
          echo 'EOF' >> $GITHUB_ENV
          
+         
