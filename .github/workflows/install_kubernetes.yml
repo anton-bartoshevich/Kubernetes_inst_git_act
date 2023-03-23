@@ -11,14 +11,13 @@ jobs:
     outputs:
       output1: ${{steps.check.outputs.check}}
     steps:
-    
     - name: Add SSH key and connect to k3s
       run: |
-        sudo which ssh-agent
+        which ssh-agent
         sudo mkdir ~/.ssh
         eval `ssh-agent -s`
-        sudo ssh-add - <<< "${{ secrets.SSH_KEY }}"
-        sudo ssh-keyscan -H ${{ secrets.JUMP_HOST }} >> ~/.ssh/known_hosts
-        sudo ssh jump_sa@178.124.206.53 ssh-keyscan 192.168.203.1 >> ~/.ssh/known_hosts
+        ssh-add - <<< "${{ secrets.SSH_KEY }}"
+        ssh-keyscan -H ${{ secrets.JUMP_HOST }} >> ~/.ssh/known_hosts
+        ssh jump_sa@178.124.206.53 ssh-keyscan 192.168.203.1 >> ~/.ssh/known_hosts
         #ssh ${{ secrets.JUMP_USERNAME }}@${{ secrets.JUMP_HOST }} ssh-keyscan ${{ secrets.K3S_HOST }} >> ~/.ssh/known_hosts
         #ssh -o ProxyCommand="ssh -W %h:%p ${{ secrets.PROXY_USERNAME }}@${{ secrets.PROXY_HOST }}" ${{ secrets.HOST_USERNAME }}@${{ secrets.HOST_IP }} "kubectl get pods -A" >> ${{ env.output }}
