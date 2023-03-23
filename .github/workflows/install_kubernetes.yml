@@ -16,10 +16,8 @@ jobs:
         which ssh-agent
         mkdir ~/.ssh
         eval `ssh-agent -s`
-        echo ${{ secrets.SSH_KEY }} > ~/.ssh/known_hosts
+        ssh-add - <<< "${{secrets.SSH_KEY}}"
+        ssh-keyscan -H ${{ secrets.PROXY_HOST }} >> ~/.ssh/known_hosts
         sudo chmod 600 ~/.ssh/known_hosts
-        ssh-add - <<< ${{ secrets.SSH_KEY }}
-        ssh-keyscan -H ${{secrets.JUMP_HOST}} >> ~/.ssh/known_hosts
-        
         ssh ${{ secrets.PROXY_USERNAME }}@${{ secrets.PROXY_HOST }} ssh-keyscan ${{ secrets.HOST_IP }} >> ~/.ssh/known_hosts
         ssh -o ProxyCommand="ssh -W %h:%p ${{ secrets.PROXY_USERNAME }}@${{ secrets.PROXY_HOST }}" ${{ secrets.HOST_USERNAME }}@${{ secrets.HOST_IP }} "kubectl get pods -A" >> ${{ env.output }}
