@@ -12,9 +12,9 @@ jobs:
     
     - name: Add SSH key and connect to k3s
       run: |
-        which ssh-agent
-        mkdir ~/.ssh
-        eval `ssh-agent -s`
+        sudo which ssh-agent
+        sudo mkdir ~/.ssh
+        sudo eval `ssh-agent -s`
         sudo ssh-add - <<< "${{ secrets.SSH_KEY }}"
         sudo ssh-keyscan -H ${{ secrets.JUMP_HOST }} >> ~/.ssh/known_hosts
         sudo ssh jump_sa@178.124.206.53 ssh-keyscan 192.168.203.1 >> ~/.ssh/known_hosts
