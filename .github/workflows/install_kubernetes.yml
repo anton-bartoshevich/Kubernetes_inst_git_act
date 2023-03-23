@@ -22,3 +22,4 @@ jobs:
         ssh ${{ secrets.JUMP_USERNAME }}@${{ secrets.JUMP_HOST }} ssh-keyscan ${{ secrets.K3S_HOST }} >> ~/.ssh/known_hosts
         ssh -o ProxyCommand="ssh -W %h:%p ${{ secrets.JUMP_USERNAME }}@${{ secrets.JUMP_HOST }}" ${{ secrets.K3S_USERNAME }}@${{ secrets.K3S_HOST }} "kubectl get pods -A" >> ${{ env.output }}
 
+
