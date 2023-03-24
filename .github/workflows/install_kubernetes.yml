@@ -26,5 +26,5 @@ jobs:
     - name: Check crashed pod's list
       uses: actions/upload-artifact@v3
       with:
-        path: report.log
+        path: output.log
 
