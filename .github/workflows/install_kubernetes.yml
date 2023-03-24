@@ -20,4 +20,18 @@ jobs:
                 HostName 178.124.206.53
                 User jump_sa
                 IdentityFile ~/.ssh/id_rsa-bastion
-   
+    - name: Install SSH key of target
+      uses: shimataro/ssh-key-action@v2
+      with:
+          key: ${{ secrets.SSH_KEY }}
+          name: id_rsa-target
+          known_hosts: ${{ secrets.KNOWN_HOSTS_OF_TARGET }} # will be appended to existing .ssh/known_hosts
+          config: |                                         # will be appended to existing .ssh/config
+               Host target
+               HostName 192.168.203.1
+               User root
+               IdentityFile ~/.ssh/id_rsa-target
+               ProxyCommand ssh -W %h:%p jump_sa@178.124.206.53
+    - name: Check k3s
+      run:  kubectl get pods -A 
+      
