@@ -9,29 +9,12 @@ jobs:
     outputs:
       output1: ${{steps.check.outputs.check}}
     steps:
-    - name: Install SSH key of bastion
-      uses: shimataro/ssh-key-action@v2
-      with:
-          key: ${{ secrets.SSH_KEY_OF_BASTION }}
-          name: id_rsa-bastion
-          known_hosts: ${{ secrets.KNOWN_HOSTS_OF_BASTION }}
-          config: |
-                Host bastion
-                HostName 178.124.206.53
-                User jump_sa
-                IdentityFile ~/.ssh/id_rsa-bastion
-    - name: Install SSH key of target
-      uses: shimataro/ssh-key-action@v2
-      with:
-          key: ${{ secrets.SSH_KEY }}
-          name: id_rsa-target
-          known_hosts: ${{ secrets.KNOWN_HOSTS_OF_TARGET }} # will be appended to existing .ssh/known_hosts
-          config: |                                         # will be appended to existing .ssh/config
-               Host target
-               HostName 192.168.203.1
-               User root
-               IdentityFile ~/.ssh/id_rsa-target
-               ProxyCommand ssh -W %h:%p -q jump_sa@178.124.206.53
-    - name: Check k3s
-      run:  kubectl get pods -A 
-      
+    - name : Connect to host
+      run: |
+         mkdir ~/.ssh
+          eval `ssh-agent -s`
+          ssh-add - <<< "${{ secrets.SSH_KEY }}"
+          echo "${{secrets.SSH_KNOWN_HOSTS}}" >> ~/.ssh/known_hosts
+          ssh "${{ secrets.K3S_USERNAME }}"@"${{ secrets.K3S_HOST }}" \
+          -o ProxyCommand="ssh -W %h:%p -q "${{secrets.JUMP_USERNAME }}"@"${{secrets.JUMP_HOST }}"" \
+          kubectl get pods -A >> report
