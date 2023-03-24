@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
        output: output.log
+       crash_report: crash_report.log
     steps:
     - name : Connect to host
       run: |
@@ -19,4 +20,11 @@ jobs:
         ssh ${{ secrets.JUMP_USERNAME }}@${{ secrets.JUMP_HOST }} ssh-keyscan ${{ secrets.K3S_HOST }} >> ~/.ssh/known_hosts
         ssh "${{ secrets.K3S_USERNAME }}"@"${{ secrets.K3S_HOST }}" \
           -o ProxyCommand="ssh -W %h:%p -q "${{secrets.JUMP_USERNAME}}"@"${{secrets.JUMP_HOST}}"" \
-          kubectl get pods -A >> report
+          kubectl get pods -A >> output
+          
+    - name: Check pods status
+      id: check_pods
+      run: |
+        kubectl get pods -A >> ${{ env.output }}
+        echo "$(cat ${{ env.output }} | grep -v Running) >> ${{ env.crash_report }}
+        echo "pods_fail=$(wc -l < ${{ env.output }})" >> $GITHUB_OUTPUT
