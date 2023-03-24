@@ -31,7 +31,7 @@ jobs:
                HostName 192.168.203.1
                User root
                IdentityFile ~/.ssh/id_rsa-target
-               ProxyCommand ssh -W %h:%p jump_sa@178.124.206.53
+               ProxyCommand ssh -W %h:%p -q jump_sa@178.124.206.53
     - name: Check k3s
       run:  kubectl get pods -A 
       
