@@ -25,3 +25,8 @@ jobs:
         kubectl get pods -A >> ${{ env.output }}
         echo "$(cat ${{ env.output }} | grep -v Running) >> ${{ env.crash_report }}
         echo "pods_fail=$(wc -l < ${{ env.output }})" >> $GITHUB_OUTPUT
+    - name: Additional information in log file
+      if: steps.check_pods.outputs.no_running_line > 1
+      uses: actions/upload-artifact@v2
+      with:
+        path: ${{ env.crash_report }}
