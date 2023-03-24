@@ -4,11 +4,11 @@ on:
     branches:
       - 'main'
 jobs:
-  check: 
-    runs-on: ubuntu-latest
+  check:
     env:
        output: output.log
        crash_report: crash_report.log
+    runs-on: ubuntu-latest
     steps:
     - name : Connect to host
       run: |
