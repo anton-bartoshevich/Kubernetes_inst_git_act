@@ -27,4 +27,13 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         path: output.log
-
+    - name: Slack notification
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_CHANEL: general
+        SLACK_COLOR: '#FF0000'
+        SLACK_ICON: https://github.com/rtCamp.png?size=48
+        SLACK_MESSAGE: 'There are creshed pods'
+        SLACK_TITLE: 'WARNING FAIL POD!!!'
+        SLACK_USERNAME: rtCamp
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
