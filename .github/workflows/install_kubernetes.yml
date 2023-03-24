@@ -18,11 +18,4 @@ jobs:
         ssh-add - <<< "${{secrets.SSH_KEY}}"
         ssh-keyscan ${{ secrets.JUMP_HOST }} >> ~/.ssh/known_hosts
         ssh ${{ secrets.JUMP_USERNAME }}@${{ secrets.JUMP_HOST }} ssh-keyscan ${{ secrets.K3S_HOST }} >> ~/.ssh/known_hosts
-        sshpass -p ${{ secrets.K3S_PASS }} ssh -oProxyCommand="sshpass ssh -W %h:%p ${{ secrets.JUMP_USERNAME }}@${{ secrets.JUMP_HOST }}" ${{ secrets.K3S_USERNAME }}@${{ secrets.K3S_HOST }} "kubectl get pods -A" >> ${{ env.output}}   
-    - name: Check pods status
-      id: check_pods
-      run: |
-        kubectl get pods -A >> ${{ env.output }}
-        echo "$(cat ${{ env.output }} | grep -v Running) >> ${{ env.crash_report }}
-        echo "pods_fail=$(wc -l < ${{ env.output }})" >> $GITHUB_OUTPUT
-    
+        
