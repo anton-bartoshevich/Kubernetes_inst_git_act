@@ -15,4 +15,4 @@ jobs:
         eval `ssh-agent -s`
         ssh-add - <<< "${{secrets.SSH_KEY}}"
         ssh-keyscan -H ${{ secrets.JUMP_HOST }} >> ~/.ssh/known_hosts
-        #ssh ${{ secrets.JUMP_USERNAME }}@${{ secrets.JUMP_HOST}}
+        ssh ${{ secrets.JUMP_USERNAME }}@${{ secrets.JUMP_HOST}} ssh-keyscan -H ${{ secrets.K3S_HOST }}
