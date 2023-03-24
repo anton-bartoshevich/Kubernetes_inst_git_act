@@ -15,6 +15,7 @@ jobs:
         mkdir ~/.ssh
         eval `ssh-agent -s`
         ssh-add - <<< "${{secrets.SSH_KEY}}"
+        ssh-keyscan -H ${{ secrets.PROXY_SERVER }} >> ~/.ssh/known_hosts
         ssh ${{ secrets.JUMP_USERNAME }}@${{ secrets.JUMP_HOST }} ssh-keyscan ${{ secrets.K3S_HOST }} >> ~/.ssh/known_hosts
 
 
