@@ -22,6 +22,5 @@ jobs:
     - name: Check pods status
       id: check_pods
       run: |
-        kubectl get pods -A >> ${{ env.output }}
         echo "$(cat ${{ env.output }} | grep -v Running) >> ${{ env.crash_report }}
         echo "pods_fail=$(wc -l < ${{ env.output }})" >> $GITHUB_OUTPUT
